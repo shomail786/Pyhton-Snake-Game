@@ -1,5 +1,6 @@
 import os, time, os.path
 from difflib import SequenceMatcher
+from datetime import datetime
 dictList = []
 with open("englishwords.txt", 'r') as file:
     for line in file:
@@ -13,19 +14,34 @@ def sentenceCheck():
 
     
 def spellChecker(words):
+    totalWords = len(words)
+    correctWords = 0
+    incorrectWords = 0
+    addedWords = 0
+    changedWords = 0
+    timeDate = datetime.now()
+    dateString = timeDate.strftime("%d/%m/%Y %H:%M:%S")
+    start = time.time()
+    
+
+
     for i in words:
         print("\n" + i)
         if i in dictList:
             print("Word found")
+            correctWords += 1
         else:
             while True:
                 incorrectChoice = input("\nIncorrect spelling - Would you like to: \nIgnore (1): \nMark as incorrect (2): \nAdd to dictionary (3): \nSuggest a correct spelling (4): ")
                 if incorrectChoice == "1":
                     print("\nWord ignored")
+                    incorrectWords += 1
                     break
+                
                 elif incorrectChoice == "2":
                     i = "?" + i + "?"
                     print(i)
+                    incorrectWords += 1
                     break
                 elif incorrectChoice == "3":
                     dictList.append(i)
@@ -55,7 +71,9 @@ def spellChecker(words):
                     break
                 else:
                     print("\nIncorrect input. Please type either 1, 2, 3 or 4.")
-    
+    end = time.time()
+    timeElapsed = end - start
+    print(timeElapsed)
 
 while True:
     menuChoice = input("\nMain Menu:\nPlease type (1) to enter a word, (2) to enter a file name, or (0) to exit : ")
