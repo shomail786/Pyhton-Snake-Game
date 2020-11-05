@@ -5,7 +5,38 @@ with open("englishwords.txt", 'r') as file:
     for line in file:
         dictList.append(line.strip("\n"))
     
+def sentenceCheck():
+    checkSentence = input("\nPlease enter the sentence you wish to check : ")
+    sentenceList = checkSentence.split(" ")
+    print(sentenceList)
+    spellChecker(sentenceList)
 
+    
+def spellChecker(sentenceList):
+    for i in sentenceList:
+        print("\n" + i)
+        if i in dictList:
+            print("\nWord found")
+        else:
+            while True:
+                incorrectChoice = input("\nIncorrect spelling - Would you like to: \nIgnore (1): \nMark as incorrect (2): \nAdd to dictionary (3): \nSuggest a correct spelling (4): ")
+                if incorrectChoice == "1":
+                    print("\nWord ignored")
+                    break
+                elif incorrectChoice == "2":
+                    i = "?" + i + "?"
+                    print(i)
+                    break
+                elif incorrectChoice == "3":
+                    dictList.append(i)
+                    with open("englishwords.txt", 'a') as file:
+                        file.write("\n" + i)
+                        print("Word added to dictionary!")
+                    break
+                elif incorrectChoice == "4":
+                    break
+                else:
+                    print("\nIncorrect input. Please type either 1, 2, 3 or 4.")
     
 
 while True:
