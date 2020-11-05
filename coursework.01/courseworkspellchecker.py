@@ -1,5 +1,5 @@
 import os, time, os.path
-
+from difflib import SequenceMatcher
 dictList = []
 with open("englishwords.txt", 'r') as file:
     for line in file:
@@ -12,11 +12,11 @@ def sentenceCheck():
     spellChecker(sentenceList)
 
     
-def spellChecker(sentenceList):
-    for i in sentenceList:
+def spellChecker(words):
+    for i in words:
         print("\n" + i)
         if i in dictList:
-            print("\nWord found")
+            print("Word found")
         else:
             while True:
                 incorrectChoice = input("\nIncorrect spelling - Would you like to: \nIgnore (1): \nMark as incorrect (2): \nAdd to dictionary (3): \nSuggest a correct spelling (4): ")
@@ -34,13 +34,31 @@ def spellChecker(sentenceList):
                         print("Word added to dictionary!")
                     break
                 elif incorrectChoice == "4":
+                    score = 0
+                    suggWord = ""
+                    for word in dictList:
+                        newScore = SequenceMatcher(None, word, i).ratio()
+                        if newScore > score:
+                            score = newScore
+                            suggWord = word
+                    print("Suggested word is " + suggWord)
+                    while True:
+                        suggChoice = input("\nWOuld you like to : \nAccept the suggestion (1): \nReject the suggestion (2): ")
+                        if suggChoice == "1":
+                            print("\nSuggestion accepted")
+                            break
+                        elif suggChoice == "2":
+                            print("\nSuggestion rejected")
+                            break
+                        else:
+                            print("\nInvalid input. Please only enter either 1 or 2.")
                     break
                 else:
                     print("\nIncorrect input. Please type either 1, 2, 3 or 4.")
     
 
 while True:
-    menuChoice = input("Welcome\nPlease type (1) to enter a word, (2) to enter a file name, or (0) to exit : ")
+    menuChoice = input("\nMain Menu:\nPlease type (1) to enter a word, (2) to enter a file name, or (0) to exit : ")
     if menuChoice in ["1", "2", "0"]:
         if menuChoice == "1":
             sentenceCheck()
@@ -54,8 +72,9 @@ while True:
                     with open(fNameCheck, 'r') as file:
                         
                         fileList = file.read()
-                        wordOutput = fileList.split(" ")
-                        print(wordOutput)
+                        fileWords = fileList.split(" ")
+                        print(fileWords)
+                        spellChecker(fileWords)
                         valChoice = True
                 except FileNotFoundError:
                     print("\nFile does not exist.")
