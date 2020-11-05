@@ -7,10 +7,15 @@ with open("englishwords.txt", 'r') as file:
         dictList.append(line.strip("\n"))
     
 def sentenceCheck():
-    checkSentence = input("\nPlease enter the sentence you wish to check : ")
-    sentenceList = checkSentence.split(" ")
-    print(sentenceList)
-    spellChecker(sentenceList)
+    while True:
+        checkSentence = input("\nPlease enter the sentence you wish to check : ")
+        if checkSentence != "":
+            sentenceList = checkSentence.split(" ")
+            print(sentenceList)
+            spellChecker(sentenceList)
+            break
+        else:
+            print("Invalid input, cannot be left blank")
 
     
 def spellChecker(words):
@@ -22,25 +27,28 @@ def spellChecker(words):
     timeDate = datetime.now()
     dateString = timeDate.strftime("%d/%m/%Y %H:%M:%S")
     start = time.time()
-    
+    originalInput = ""
     for i in words:
         i = re.sub(r'[^a-zA-Z]+', '', i.lower())
         print("\n" + i)
         if i in dictList:
             print("Word found")
             correctWords += 1
+            originalInput = originalInput + " " + i
         else:
             while True:
                 incorrectChoice = input("\nIncorrect spelling - Would you like to: \nIgnore (1): \nMark as incorrect (2): \nAdd to dictionary (3): \nSuggest a correct spelling (4): ")
                 if incorrectChoice == "1":
                     print("\nWord ignored")
                     incorrectWords += 1
+                    originalInput = originalInput + " " + i
                     break
                 
                 elif incorrectChoice == "2":
                     i = "?" + i + "?"
                     print(i)
                     incorrectWords += 1
+                    originalInput = originalInput + " " + i
                     break
                 elif incorrectChoice == "3":
                     dictList.append(i)
@@ -49,6 +57,7 @@ def spellChecker(words):
                         print("Word added to dictionary!")
                         correctWords += 1
                         addedWords += 1
+                        originalInput = originalInput + " " + i
                     break
                 elif incorrectChoice == "4":
                     score = 0
@@ -60,15 +69,18 @@ def spellChecker(words):
                             suggWord = word
                     print("Suggested word is " + suggWord)
                     while True:
-                        suggChoice = input("\nWOuld you like to : \nAccept the suggestion (1): \nReject the suggestion (2): ")
+                        suggChoice = input("\nWould you like to : \nAccept the suggestion (1): \nReject the suggestion (2): ")
                         if suggChoice == "1":
+                            i = suggWord
                             print("\nSuggestion accepted")
                             correctWords += 1
                             changedWords += 1
+                            originalInput = originalInput + " " + i
                             break
                         elif suggChoice == "2":
                             print("\nSuggestion rejected")
                             incorrectWords += 1
+                            originalInput = originalInput + " " + i
                             break
                         else:
                             print("\nInvalid input. Please only enter either 1 or 2.")
@@ -77,12 +89,13 @@ def spellChecker(words):
                     print("\nIncorrect input. Please type either 1, 2, 3 or 4.")
     end = time.time()
     timeElapsed = end - start
-    summary = ("\nSummary Statistics : \nTotal Words : " + str(totalWords) + "\nNumber of Correct Words : " + str(correctWords) + "\nNumber of Incorrect Words : " + str(incorrectWords) + "\nNumber of Added Words : " + str(addedWords) + "\nNumber of Changed Words : " + str(changedWords) + "\nDate and Time of Spellcheck : " + str(dateString) + "\nTime Elapsed : " + str(timeElapsed) + " Seconds")
+    summary = ("\nSummary Statistics : \nTotal Words : " + str(totalWords) + "\nNumber of Correct Words : " + str(correctWords) + "\nNumber of Incorrect Words : " + str(incorrectWords) + "\nNumber of Added Words : " + str(addedWords) + "\nNumber of Changed Words : " + str(changedWords) + "\nDate and Time of Spellcheck : " + str(dateString) + "\nTime Elapsed : " + str(timeElapsed) + " Seconds " "\nInput : " + originalInput)
     print(summary)
-    f = open("summarystats.txt", "a")
-    f.write(summary)
-    f.close()
-
+    statsFileName = input("\nPlease enter a filename for the spellcheck file : ")
+    statsFile = open(statsFileName, "w")
+    statsFile.write(summary)
+    statsFile.close
+    print("\nFile Saved")
 
 while True:
     menuChoice = input("\nMain Menu:\nPlease Select An Option : \nEnter a word (1) : \nEnter a file name (2) : \nExit (0) : ")
