@@ -1,4 +1,4 @@
-import os, time, os.path
+import os, time, os.path, re
 from difflib import SequenceMatcher
 from datetime import datetime
 dictList = []
@@ -23,9 +23,8 @@ def spellChecker(words):
     dateString = timeDate.strftime("%d/%m/%Y %H:%M:%S")
     start = time.time()
     
-
-
     for i in words:
+        i = re.sub(r'[^a-zA-Z]+', '', i.lower())
         print("\n" + i)
         if i in dictList:
             print("Word found")
@@ -48,6 +47,8 @@ def spellChecker(words):
                     with open("englishwords.txt", 'a') as file:
                         file.write("\n" + i)
                         print("Word added to dictionary!")
+                        correctWords += 1
+                        addedWords += 1
                     break
                 elif incorrectChoice == "4":
                     score = 0
@@ -62,9 +63,12 @@ def spellChecker(words):
                         suggChoice = input("\nWOuld you like to : \nAccept the suggestion (1): \nReject the suggestion (2): ")
                         if suggChoice == "1":
                             print("\nSuggestion accepted")
+                            correctWords += 1
+                            changedWords += 1
                             break
                         elif suggChoice == "2":
                             print("\nSuggestion rejected")
+                            incorrectWords += 1
                             break
                         else:
                             print("\nInvalid input. Please only enter either 1 or 2.")
@@ -73,10 +77,15 @@ def spellChecker(words):
                     print("\nIncorrect input. Please type either 1, 2, 3 or 4.")
     end = time.time()
     timeElapsed = end - start
-    print(timeElapsed)
+    summary = ("\nSummary Statistics : \nTotal Words : " + str(totalWords) + "\nNumber of Correct Words : " + str(correctWords) + "\nNumber of Incorrect Words : " + str(incorrectWords) + "\nNumber of Added Words : " + str(addedWords) + "\nNumber of Changed Words : " + str(changedWords) + "\nDate and Time of Spellcheck : " + str(dateString) + "\nTime Elapsed : " + str(timeElapsed) + " Seconds")
+    print(summary)
+    f = open("summarystats.txt", "a")
+    f.write(summary)
+    f.close()
+
 
 while True:
-    menuChoice = input("\nMain Menu:\nPlease type (1) to enter a word, (2) to enter a file name, or (0) to exit : ")
+    menuChoice = input("\nMain Menu:\nPlease Select An Option : \nEnter a word (1) : \nEnter a file name (2) : \nExit (0) : ")
     if menuChoice in ["1", "2", "0"]:
         if menuChoice == "1":
             sentenceCheck()
@@ -91,7 +100,6 @@ while True:
                         
                         fileList = file.read()
                         fileWords = fileList.split(" ")
-                        print(fileWords)
                         spellChecker(fileWords)
                         valChoice = True
                 except FileNotFoundError:
