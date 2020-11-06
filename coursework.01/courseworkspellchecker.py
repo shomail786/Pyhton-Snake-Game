@@ -11,7 +11,10 @@ with open("englishwords.txt", 'r') as file:
 #Function to take in sentence input and pass into spellcheck function.
 def sentenceCheck():
     while True:
-        checkSentence = input("\nPlease enter the sentence you wish to check : ")
+        print("\n\u2554"+"\u2550"*60+"\u2557")
+        checkSentence = input("""
+        Please enter the sentence you wish to check : 
+        """ + "\n\u255A"+"\u2550"*60+"\u255D\n")
         if checkSentence != "":
             sentenceList = checkSentence.split(" ")
             spellChecker(sentenceList)
@@ -38,7 +41,7 @@ def spellChecker(words):
     #loops through sentence/file passed into the function. Removes any characters that are non alpha, and ensures all are lowercase.
     for i in words:
         i = re.sub(r'[^a-zA-Z]+', '', i.lower())
-        print("\n" + i)
+        print("\n" + i + " : ")
         
         if i in dictList:
             print("Word found")
@@ -48,7 +51,15 @@ def spellChecker(words):
         #If word is not in dictionary, 4 options presented. Each option increments its respective summary statistic(s). Also updates original Input variable to output full string afterwards. 
         else:
             while True:
-                incorrectChoice = input("Incorrect spelling - Would you like to: \nIgnore (1): \nMark as incorrect (2): \nAdd to dictionary (3): \nSuggest a correct spelling (4): ")
+                print("\n\n\u2554"+"\u2550"*40+"\u2557")
+                incorrectChoice = input("""
+    Incorrect spelling - 
+    Would you like to: 
+    Ignore (1): 
+    Mark as incorrect (2): 
+    Add to dictionary (3): 
+    Suggest a correct spelling (4): """ + "\n\n\u255A"+"\u2550"*40+"\u255D\n")
+                
                 if incorrectChoice == "1":
                     print("\nWord ignored")
                     incorrectWords += 1
@@ -81,10 +92,14 @@ def spellChecker(words):
                         if newScore > score:
                             score = newScore
                             suggWord = word
-                    print("Suggested word is " + suggWord)
+                    print("\nSuggested word is " + suggWord)
                     
                     while True:
-                        suggChoice = input("\nWould you like to : \nAccept the suggestion (1): \nReject the suggestion (2): ")
+                        print("\n\n\u2554"+"\u2550"*40+"\u2557")
+                        suggChoice = input("""
+        Would you like to : 
+        Accept the suggestion (1): 
+        Reject the suggestion (2): """ + "\n\n\u255A"+"\u2550"*40+"\u255D\n")
                         if suggChoice == "1":
                             i = suggWord
                             print("\nSuggestion accepted")
@@ -110,25 +125,47 @@ def spellChecker(words):
     timeElapsed = end - start
     
     #Concatenates all summary statistics and saves them into user specified file. 
-    summary = ("\nSummary Statistics : \nTotal Words : " + str(totalWords) + "\nNumber of Correct Words : " + str(correctWords) + "\nNumber of Incorrect Words : " + str(incorrectWords) + "\nNumber of Added Words : " + str(addedWords) + "\nNumber of Changed Words : " + str(changedWords) + "\nDate and Time of Spellcheck : " + str(dateString) + "\nTime Elapsed : " + str(timeElapsed) + " Seconds " "\nInput : " + originalInput)
+    summary = ("\n\u2554"+"\u2550"*60+"\u2557\n"""" 
+    Summary Statistics : 
+    Total Words : """ + str(totalWords) + """
+    Number of Correct Words : """ + str(correctWords) + """
+    Number of Incorrect Words : """ + str(incorrectWords) + """
+    Number of Added Words : """ + str(addedWords) + """
+    Number of Changed Words : """ + str(changedWords) + """
+    Date and Time of Spellcheck : """ + str(dateString) + """
+    Time Elapsed : """ + str(timeElapsed) + """ Seconds
+    Input : """ + originalInput + "\n\n\u255A"+"\u2550"*60+"\u255D\n")
     print(summary)
-    statsFileName = input("\nPlease enter a filename for the spellcheck file : ")
+    print("\n\n\u2554"+"\u2550"*60+"\u2557")
+    statsFileName = input("""
+    Please enter a filename for the spellcheck file : """ + "\n\n\u255A"+"\u2550"*60+"\u255D\n")
     statsFile = open(statsFileName, "w")
     statsFile.write(summary)
     statsFile.close
     print("\nFile Saved")
     while True:
-        option = input("\nWould you like to return to the main menu (1) or Quit (2) : ")
+        print("\n\n\u2554"+"\u2550"*80+"\u2557")
+        option = input("""
+        Would you like to return to the main menu (1) or Quit (2) : """ + "\n\n\u255A"+"\u2550"*80+"\u255D\n")
         if option == "1":
             break
         elif option == "2":
             print("Exiting program ... ")
             time.sleep(2)
             sys.exit()
-
+        else:
+            print("\nInvalid Input - Please only enter either 1 or 2.")
 #Main menu - Validated input, only allows for input of 1, 2 or 0.
 while True:
-    menuChoice = input("\nMain Menu:\nPlease Select An Option : \nEnter a sentence (1) : \nEnter a file name (2) : \nExit (0) : ")
+    print("\n\u2554"+"\u2550"*40+"\u2557")
+    menuChoice = input("""
+    Main Menu: 
+    Please Select An Option : 
+    Enter a sentence (1) : 
+    Enter a file name (2) : 
+    Exit (0) : 
+    """ + "\n\u255A"+"\u2550"*40+"\u255D\n")
+    #print("\n\u255A"+"\u2550"*40+"\u255D")
     if menuChoice in ["1", "2", "0"]:
         if menuChoice == "1":
             sentenceCheck()
@@ -137,7 +174,9 @@ while True:
         elif menuChoice == "2":
             valChoice = False
             while valChoice == False:
-                fNameCheck = input("\nPlease enter the filename that you would like to check, along with the .txt extension : ")
+                print("\n\n\u2554"+"\u2550"*100+"\u2557")
+                fNameCheck = input("""
+    Please enter the filename that you would like to check, along with the .txt extension : """ + "\n\n\u255A"+"\u2550"*100+"\u255D\n")
                 try:
                     with open(fNameCheck, 'r') as file:
                         
@@ -149,7 +188,11 @@ while True:
                     print("\nFile does not exist.")
                     valInput = False
                     while valInput == False:
-                        choice = input("\nWould you like to :\n\nRe-enter the filename (1)\n\nReturn to main menu (2) ")
+                        print("\n\u2554"+"\u2550"*40+"\u2557")    
+                        choice = input("""
+    Would you like to :
+    Re-enter the filename (1) : 
+    Return to main menu (2) : """ + "\n\n\u255A"+"\u2550"*40+"\u255D\n")
                         if choice == "1":
                             valInput = True
                         elif choice == "2":
