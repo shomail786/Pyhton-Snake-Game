@@ -1,7 +1,26 @@
 from tkinter import *
 import sys, os
 
+def restartProgram():
+    print("Restarting")
 
+def menuWindow():
+    pauseMenu.destroy()
+    os.system("python3 menu.py")
+
+def resumeProgram():
+    pauseMenu.destroy()
+    
+    
+def exitProgram():
+    pauseMenu.destroy()
+    os._exit(0)
+
+def saveGame():
+    print("Saved")
+
+def leaderWindow():
+    print("Leaderbaords")
 
 h = 600
 w = 400
