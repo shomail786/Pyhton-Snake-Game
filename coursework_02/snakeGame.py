@@ -23,7 +23,17 @@ def setWindowDimensions(w,h):
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
     return window
 
+def moveFood():
+    global food, foodX, foodY
+    canvas.move(food, (foodX*(-1)), (foodY*(-1)))
+    foodX = random.randint(0,width-snakeSize)
+    foodY = random.randint(0,height-snakeSize)
+    canvas.move(food, foodX, foodY)
 
+def overlapping(a,b):
+    if a[0] < b[2] and a[2] > b[0] and a[1] < b[3] and a[3] > b[1]:
+        return True
+    return False
     
 def growSnake():
     lastElement = len(snake)-1
