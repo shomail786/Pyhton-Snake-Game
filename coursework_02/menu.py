@@ -1,7 +1,24 @@
 from tkinter import *
 import sys, os
 
+def gameWindow():
+    mainMenu.destroy()
+    os.system("python3 snakeGame.py")
 
+def instructionWindow():
+    print("How to play")
+
+def leaderWindow():
+    print("Leaderbaords")
+
+def controlsWindow():
+    print("Controls")
+
+def loadGame():
+    print("Load Game")
+
+def exitProgram():
+    os._exit(0)
 
 h = 720
 w = 1280
