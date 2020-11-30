@@ -13,6 +13,37 @@ def pauseWindow():
 
 
 
+
+
+
+
+
+def placeFood():
+    global food, foodX, foodY
+    food = canvas.create_rectangle(0,0, snakeSize, snakeSize, fill="steel blue")
+    foodX = random.randint(0,width-snakeSize)
+    foodY = random.randint(0, height-snakeSize)
+    canvas.move(food, foodX, foodY)
+
+def escKey(event):
+    pauseWindow()
+
+def leftKey(event):
+    global direction
+    direction = "left"
+
+def rightKey(event):
+    global direction
+    direction = "right"
+
+def upKey(event):
+    global direction
+    direction = "up"
+
+def downKey(event):
+    global direction
+    direction = "down"
+
 def setWindowDimensions(w,h):
     window = Tk()
     window.title("Snake Game")
