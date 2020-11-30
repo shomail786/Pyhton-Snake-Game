@@ -25,6 +25,62 @@ def setWindowDimensions(w,h):
 
 
     
+def growSnake():
+    lastElement = len(snake)-1
+    lastElementPos = canvas.coords(snake[lastElement])
+    snake.append(canvas.create_rectangle(0,0, snakeSize,snakeSize,fill="#FDF3F3"))
+    if (direction == "left"):
+        canvas.coords(snake[lastElement+1],lastElementPos[0]+snakeSize, lastElementPos[1],lastElementPos[2]+snakeSize,lastElementPos[3])
+    
+    elif (direction == "right"):
+        canvas.coords(snake[lastElement+1],lastElementPos[0]-snakeSize, lastElementPos[1],lastElementPos[2]-snakeSize,lastElementPos[3])
+
+    elif (direction == "up"):
+        canvas.coords(snake[lastElement+1],lastElementPos[0], lastElementPos[1]+snakeSize,lastElementPos[2],lastElementPos[3]+snakeSize)
+
+    else:
+        canvas.coords(snake[lastElement+1],lastElementPos[0], lastElementPos[1]-snakeSize,lastElementPos[2],lastElementPos[3]-snakeSize)
+
+    global score
+    
+    score += 10
+    
+    txt = "Score:" + str(score)
+    canvas.itemconfigure(scoreText, text=txt)
+
+def moveSnake():
+    canvas.pack()
+    positions = []
+    positions.append(canvas.coords(snake[0]))
+    if positions[0][0] < 0:
+        canvas.coords(snake[0],width,positions[0][1],width-snakeSize,positions[0][3])
+    
+    elif positions[0][2] > width:
+        canvas.coords(snake[0],0-snakeSize, positions[0][1],0,positions[0][3])
+    
+    elif positions[0][3] > height:
+        canvas.coords(snake[0],positions[0][0],0 - snakeSize,positions[0][2],0)
+
+    elif positions[0][1] < 0:
+        canvas.coords(snake[0],positions[0][0],height,positions[0][2],height-snakeSize)
+
+    positions.clear()
+    positions.append(canvas.coords(snake[0]))
+
+    if direction == "left":
+        canvas.move(snake[0], -snakeSize,0)
+    
+    elif direction == "right":
+        canvas.move(snake[0], snakeSize,0)
+
+    elif direction == "up":
+        canvas.move(snake[0], 0,-snakeSize)
+
+    elif direction == "down":
+        canvas.move(snake[0], 0,snakeSize)
+    sHeadPos = canvas.coords(snake[0])
+    foodPos = canvas.coords(food)
+    
 
 
 
@@ -63,6 +119,8 @@ direction = "right"
 
 
 
-
+pauseButton()
+placeFood()
+moveSnake()
 window.mainloop()
 
