@@ -11,7 +11,9 @@ def pauseWindow():
     os.system("python3 pauseMenu.py")
 
 
-
+def pauseButton():
+    btnPause = Button(window, bg="#e0b522", image=pauseImage, width="40", height="40", command= pauseWindow)
+    btnPause.place(x=40,y=40)
 
 
 
