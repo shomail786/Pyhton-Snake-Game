@@ -81,7 +81,22 @@ def moveSnake():
     sHeadPos = canvas.coords(snake[0])
     foodPos = canvas.coords(food)
     
-
+    if overlapping(sHeadPos, foodPos):
+        moveFood()
+        growSnake()
+    
+    for i in range(1, len(snake)):
+        if overlapping(sHeadPos, canvas.coords(snake[i])):
+            gameOver = True
+            gameOverWindow()
+    
+    for i in range(1, len(snake)):
+        positions.append(canvas.coords(snake[i]))
+    for i in range(len(snake)-1):
+        canvas.coords(snake[i+1],positions[i][0], positions[i][1],positions[i][2],positions[i][3])
+    
+    if 'gameOver' not in locals():
+        window.after(50, moveSnake)
 
 
 width = 1280
