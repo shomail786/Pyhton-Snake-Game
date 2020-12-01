@@ -1,7 +1,10 @@
-# Game Resolution: 1280 X 720
 
 from tkinter import *
 import random, time, sys, os
+
+def bossWindow():
+    window.destroy()
+    os.system("python3 bossWindow.py")
 
 def gameOverWindow():
     window.destroy()
@@ -13,12 +16,7 @@ def pauseWindow():
 
 def pauseButton():
     btnPause = Button(window, bg="#e0b522", image=pauseImage, width="40", height="40", command= pauseWindow)
-    btnPause.place(x=40,y=40)
-
-
-
-
-
+    btnPause.place(x=45,y=45)
 
 def placeFood():
     global food, foodX, foodY
@@ -26,6 +24,9 @@ def placeFood():
     foodX = random.randint(0,width-snakeSize)
     foodY = random.randint(0, height-snakeSize)
     canvas.move(food, foodX, foodY)
+
+def bossKey(event):
+    bossWindow()
 
 def escKey(event):
     pauseWindow()
@@ -85,9 +86,9 @@ def growSnake():
         canvas.coords(snake[lastElement+1],lastElementPos[0], lastElementPos[1]-snakeSize,lastElementPos[2],lastElementPos[3]-snakeSize)
 
     global score
-    
+    global speed
     score += 10
-    
+    speed -= 2
     txt = "Score:" + str(score)
     canvas.itemconfigure(scoreText, text=txt)
 
@@ -139,7 +140,9 @@ def moveSnake():
         canvas.coords(snake[i+1],positions[i][0], positions[i][1],positions[i][2],positions[i][3])
     
     if 'gameOver' not in locals():
-        window.after(50, moveSnake)
+        global speed
+        window.after(speed, moveSnake)
+            
 
 
 width = 1280
@@ -162,6 +165,7 @@ snake.append(canvas.create_rectangle(snakeSize,snakeSize, snakeSize * 2, snakeSi
 
 
 score = 0
+speed = 70
 txt = "Score:" + str(score)
 
 scoreText = canvas.create_text( width/2 , 20 , fill="white" , font="Helvetica 18", text=txt)
@@ -171,6 +175,7 @@ canvas.bind("<Right>", rightKey)
 canvas.bind("<Up>", upKey)
 canvas.bind("<Down>", downKey)
 canvas.bind("<Escape>", escKey)
+canvas.bind("<B>", bossKey)
 canvas.focus_set()
 
 direction = "right"
