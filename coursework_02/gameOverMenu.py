@@ -1,7 +1,28 @@
 from tkinter import *
 import sys, os
 
+def restartProgram():
+    print("Restarting")
+    gameOverMenu.destroy()
+    os.system("python3 snakeGame.py")
 
+def menuWindow():
+    gameOverMenu.destroy()
+    os.system("python3 menu.py")
+
+def resumeProgram():
+    gameOverMenu.destroy()
+    
+    
+def exitProgram():
+    gameOverMenu.destroy()
+    os._exit(0)
+
+def saveGame():
+    print("Saved")
+
+def leaderWindow():
+    print("Leaderbaords")
 
 h = 600
 w = 400
