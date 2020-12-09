@@ -32,6 +32,38 @@ def gameFunction():
     def bossKey(event):
         bossWindow()
 
+    def slowKey(event):
+        global speed
+        if speed < 85:
+            speed += 1
+        else:
+            speed = 85
+
+    
+    def fastKey(event):
+        global speed
+        if speed > 5:
+            speed -= 1
+        else:
+            speed = 6
+
+
+    def smallKey(event):
+        global snakeSize
+        if snakeSize > 10:
+            snakeSize -= 1
+        else:
+            snakeSize = 10
+        print(snakeSize)
+
+    def bigKey(event):
+        global snakeSize
+        if snakeSize < 30:
+            snakeSize += 1
+        else:
+            snakeSize = 30
+        
+        print(snakeSize)
         
     
     def escKey(event):
