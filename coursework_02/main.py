@@ -1,9 +1,46 @@
 from tkinter import *
 import sys, os, random
+from tkinter import messagebox
+
 
 
 
 def gameFunction():
+
+    #def arrowKeys:
+    def leftKey(event):
+        global direction
+        direction = "left"
+
+    def rightKey(event):
+        global direction
+        direction = "right"
+
+    def upKey(event):
+        global direction
+        direction = "up"
+
+    def downKey(event):
+        global direction
+        direction = "down"
+
+    
+    #def wasdKeys:
+    def aKey(event):
+        global direction
+        direction = "left"
+
+    def dKey(event):
+        global direction
+        direction = "right"
+
+    def wKey(event):
+        global direction
+        direction = "up"
+
+    def sKey(event):
+        global direction
+        direction = "down"
 
     def bossWindow():
         window.destroy()
@@ -14,9 +51,12 @@ def gameFunction():
         gMenu()
 
     def pauseWindow():
-        window.destroy()
-        pMenu()
+        if messagebox.askyesno("Paused", "Would you like to resume?"):
+            pass
 
+        else:
+            window.destroy()
+            pMenu()
 
     def pauseButton():
         btnPause = Button(window, bg="#e0b522", image=pauseImage, width="40", height="40", command= pauseWindow)
@@ -69,21 +109,7 @@ def gameFunction():
     def escKey(event):
         pauseWindow()
 
-    def leftKey(event):
-        global direction
-        direction = "left"
-
-    def rightKey(event):
-        global direction
-        direction = "right"
-
-    def upKey(event):
-        global direction
-        direction = "up"
-
-    def downKey(event):
-        global direction
-        direction = "down"
+    
 
     def setWindowDimensions(w,h):
         window = Tk()
@@ -207,17 +233,26 @@ def gameFunction():
     txt = "Score:" + str(score)
 
     scoreText = canvas.create_text( width/2 , 20 , fill="white" , font="Helvetica 18", text=txt)
+    global arrows
+    if arrows == True:
+        canvas.bind("<Left>", leftKey) 
+        canvas.bind("<Right>", rightKey)
+        canvas.bind("<Up>", upKey)
+        canvas.bind("<Down>", downKey)
 
-    canvas.bind("<Left>", leftKey) 
-    canvas.bind("<Right>", rightKey)
-    canvas.bind("<Up>", upKey)
-    canvas.bind("<Down>", downKey)
+    else:
+        canvas.bind("<a>", aKey) 
+        canvas.bind("<d>", dKey)
+        canvas.bind("<w>", wKey)
+        canvas.bind("<s>", sKey)
+
     canvas.bind("<Escape>", escKey)
     canvas.bind("<b>", bossKey)
     canvas.bind("<j>", slowKey)
     canvas.bind("<k>", fastKey)
     canvas.bind("<n>", smallKey)
     canvas.bind("<m>", bigKey)
+    
     canvas.focus_set()
 
 
@@ -250,7 +285,8 @@ def pMenu():
         os._exit(0)
 
     def saveGame():
-        print("Saved")
+        pauseMenu.destroy()
+        saveFunction()
 
     def leaderWindow():
         print("Leaderbaords")
@@ -264,45 +300,79 @@ def pMenu():
     global pause
     pauseBgImage = PhotoImage(file="pausebg.gif")
     
-    canvas = Canvas(pauseMenu, bg='#e0b522', height=h, width=w)
+    canvas = Canvas(pauseMenu, height=h, width=w)
 
-    txt = "~PAUSED~" 
+    #txt = "~PAUSED~" 
 
-    scoreText = canvas.create_text(200,70, fill="white" , font="Helvetica 40", text=txt)
+    #scoreText = canvas.create_text(200,70, fill="white" , font="Helvetica 40", text=txt)
     canvas.pack()
 
 
-    #bgPause = Label(pauseMenu, image=pauseBgImage)
-    #bgPause.pack(x=0,y=0)
+    bgPause = Label(pauseMenu, image=pauseBgImage)
+    bgPause.place(x=0,y=0)
 
 
-    resumeButton = Button(pauseMenu, text="Resume", bg='black', fg='white', height=2, width=20, command= resumeProgram)
-    resumeButton.place(x=105, y=110)
-
-    mainMenuButton = Button(pauseMenu, text="Main Menu", bg='black', fg='white', height=2, width=20, command= menuWindow)
+    mainMenuButton = Button(pauseMenu, text="Main Menu", bg='#e0b522', fg='white', height=2, width=20, command= menuWindow)
     mainMenuButton.place(x=105, y=175)
 
-    saveButton = Button(pauseMenu, text="Save", bg='black', fg='white', height=2, width=20, command= saveGame)
+    saveButton = Button(pauseMenu, text="Save", bg='#e0b522', fg='white', height=2, width=20, command= saveGame)
     saveButton.place(x=105, y=240)
 
-    leaderButton = Button(pauseMenu, text="Leaderboards", bg='black', fg='white', height=2, width=20, command= leaderWindow)
+    leaderButton = Button(pauseMenu, text="Leaderboards", bg='#e0b522', fg='white', height=2, width=20, command= leaderWindow)
     leaderButton.place(x=105, y=305)
 
-    restartButton = Button(pauseMenu, text="Restart", bg='black', fg='white', height=2, width=20, command= restartProgram)
+    restartButton = Button(pauseMenu, text="Restart", bg='#e0b522', fg='white', height=2, width=20, command= restartProgram)
     restartButton.place(x=105, y=370)
 
-    exitButton = Button(pauseMenu, text="Exit", bg='black', fg='white', height=2, width=20, command= exitProgram)
+    exitButton = Button(pauseMenu, text="Exit", bg='#e0b522', fg='white', height=2, width=20, command= exitProgram)
     exitButton.place(x=105, y=435)
 
-    # exitButton = Button(pauseMenu, text="Exit", bg='black', fg='white', height=2, width=20, command= exitProgram)
-    # exitButton.place(x=105, y=435)
 
-    # cheatButton = Button(pauseMenu, text="Cheat Code", bg='black', fg='white', height=2, width=20, command= cheatWindow)
-    # cheatButton.place(x=105, y=500)
 
     pauseMenu.mainloop()
 
 
+def cWindow():
+     
+    def menuWindow():
+        controlWindow.destroy()
+        mMenu()
+
+    def wasdControls():
+        global arrows
+        arrows = False
+
+    def arrowControls():
+        global arrows
+        arrows = True
+
+    h = 600
+    w = 400
+
+    controlWindow = Tk()
+    controlWindow.title("Snek")
+
+    bgImage = PhotoImage(file="changecontrols.png")
+
+    canvas = Canvas(controlWindow, height=h, width=w)
+    canvas.pack()
+
+    bgLabel = Label(canvas, image=bgImage)
+    bgLabel.pack()
+
+
+    mainMenuButton = Button(controlWindow, text="Main Menu", bg='#e0b522', fg='white', height=2, width=20, command= menuWindow)
+    mainMenuButton.place(x=545, y=620)
+
+    wasdButton = Button(controlWindow, text="WASD", bg='#e0b522', fg='white', height=2, width=10, command= wasdControls)
+    wasdButton.place(x=810, y=510)
+
+    arrowButton = Button(controlWindow, text='Arrow Keys', bg='#e0b522', fg='white', height=2, width=10, command= arrowControls)
+    arrowButton.place(x=810, y=270)
+
+    
+
+    controlWindow.mainloop()
 
 
 def gMenu():
@@ -329,7 +399,8 @@ def gMenu():
         os._exit(0)
 
     def saveGame():
-        print("Saved")
+        gameOverMenu.destroy()
+        saveFunction()
 
     def leaderWindow():
         print("Leaderbaords")
@@ -362,19 +433,19 @@ def gMenu():
     nameText = Entry(gameOverMenu, bg="white",)
     nameText.place(x=95, y=160)
 
-    submitButton = Button(gameOverMenu, text="Submit", bg='black', fg='white', height=1, width=4, command= saveLeaderBoard)
+    submitButton = Button(gameOverMenu, text="Submit", bg='#e0b522', fg='white', height=1, width=4, command= saveLeaderBoard)
     submitButton.place(x=270, y=155)
 
-    mainMenuButton = Button(gameOverMenu, text="Main Menu", bg='black', fg='white', height=3, width=20, command= menuWindow)
+    mainMenuButton = Button(gameOverMenu, text="Main Menu", bg='#e0b522', fg='white', height=3, width=20, command= menuWindow)
     mainMenuButton.place(x=105, y=230)
 
-    restartButton = Button(gameOverMenu, text="Restart", bg='black', fg='white', height=3, width=20, command= restartProgram)
+    restartButton = Button(gameOverMenu, text="Restart", bg='#e0b522', fg='white', height=3, width=20, command= restartProgram)
     restartButton.place(x=105, y=305)
 
-    leaderButton = Button(gameOverMenu, text="Leaderboards", bg='black', fg='white', height=3, width=20, command= leaderWindow)
+    leaderButton = Button(gameOverMenu, text="Leaderboards", bg='#e0b522', fg='white', height=3, width=20, command= leaderWindow)
     leaderButton.place(x=105, y=380)
 
-    exitButton = Button(gameOverMenu, text="Exit", bg='black', fg='white', height=3, width=20, command= exitProgram)
+    exitButton = Button(gameOverMenu, text="Exit", bg='#e0b522', fg='white', height=3, width=20, command= exitProgram)
     exitButton.place(x=105, y=455)
 
 
@@ -457,7 +528,8 @@ def mMenu():
         print("Leaderbaords")
 
     def controlsWindow():
-        print("Controls")
+        mainMenu.destroy()
+        cWindow()
 
     def loadGame():
         print("Load Game")
@@ -509,4 +581,5 @@ direction = "right"
 snakeSize = 15
 score = 0
 speed = 70
+arrows = True
 mMenu()
