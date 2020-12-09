@@ -2,7 +2,7 @@ from tkinter import *
 import sys, os, random
 from tkinter import messagebox
 
-
+def loadFunction():
     
     def menuWindow():
         loadMenu.destroy()
@@ -121,6 +121,7 @@ def gameFunction():
         direction = "down"
 
     
+
     def aKey(event):
         global direction
         direction = "left"
