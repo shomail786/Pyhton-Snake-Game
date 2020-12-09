@@ -3,11 +3,107 @@ import sys, os, random
 from tkinter import messagebox
 
 
+    
+    def menuWindow():
+        loadMenu.destroy()
+        mMenu()
+                
+    def exitProgram():
+        loadMenu.destroy()
+        os._exit(0)
+
+    def loadGameProg():
+        global score
+        fileString = fileText.get()
+        loadFile = open(fileString, 'r')
+        scoreString = loadFile.read()
+        print(scoreString)
+        loadFile.close()
+        score = int(scoreString)
+        loadMenu.destroy()
+        gameFunction()
+        
+
+    h = 450
+    w = 400
+
+    loadMenu = Tk()
+    loadMenu.title("Snek")
+
+
+    canvas = Canvas(loadMenu, bg='#e0b522', height=h, width=w)
+    canvas.pack()
+
+    
+    titleLabel =Label(loadMenu, text="~LOAD~", font="Helevtica 48", bg='#e0b522', fg='white')
+    titleLabel.place(x=60, y=30)
+    
+    nameLabel =Label(loadMenu, text="Enter filename", font="Helvetica 22", bg='#e0b522', fg='white')
+    nameLabel.place(x=100, y=145)
+
+    fileText = Entry(loadMenu, bg="white")
+    fileText.place(x=95, y=200)
+
+    submitButton = Button(loadMenu, text="Load", bg='#e0b522', fg='white', height=1, width=4, command= loadGameProg)
+    submitButton.place(x=270, y=195)
+
+    mainMenuButton = Button(loadMenu, text="Main Menu", bg='#e0b522', fg='white', height=3, width=20, command= menuWindow)
+    mainMenuButton.place(x=105, y=260)
+
+    exitButton = Button(loadMenu, text="Exit", bg='#e0b522', fg='white', height=3, width=20, command= exitProgram)
+    exitButton.place(x=105, y=330)
+
+
+def saveFunction():
+     
+    def menuWindow():
+        saveMenu.destroy()
+        mMenu()
+                
+    def exitProgram():
+        saveMenu.destroy()
+        os._exit(0)
+
+    def saveGameProg():
+        global score
+        scoreString = str(score)
+        fileString = fileText.get()
+        saveFile = open(fileString, 'w')
+        saveFile.write(scoreString)
+        saveFile.close()
+
+    h = 450
+    w = 400
+
+    saveMenu = Tk()
+    saveMenu.title("Snek")
+
+
+    canvas = Canvas(saveMenu, bg='#e0b522', height=h, width=w)
+    canvas.pack()
+
+    titleLabel =Label(saveMenu, text="~SAVE~", font="Helevtica 48", bg='#e0b522', fg='white')
+    titleLabel.place(x=60, y=30)
+    
+    nameLabel =Label(saveMenu, text="Enter filename", font="Helvetica 22", bg='#e0b522', fg='white')
+    nameLabel.place(x=100, y=145)
+
+    fileText = Entry(saveMenu, bg="white")
+    fileText.place(x=95, y=200)
+
+    submitButton = Button(saveMenu, text="Save", bg='#e0b522', fg='white', height=1, width=4, command= saveGameProg)
+    submitButton.place(x=270, y=195)
+
+    mainMenuButton = Button(saveMenu, text="Main Menu", bg='#e0b522', fg='white', height=3, width=20, command= menuWindow)
+    mainMenuButton.place(x=105, y=260)
+
+    exitButton = Button(saveMenu, text="Exit", bg='#e0b522', fg='white', height=3, width=20, command= exitProgram)
+    exitButton.place(x=105, y=330)
 
 
 def gameFunction():
 
-    #def arrowKeys:
+
     def leftKey(event):
         global direction
         direction = "left"
@@ -25,7 +121,6 @@ def gameFunction():
         direction = "down"
 
     
-    #def wasdKeys:
     def aKey(event):
         global direction
         direction = "left"
@@ -225,7 +320,7 @@ def gameFunction():
 
     snake = []
     global snakeSize
-    #snakeSize = 15
+    snakeSize = 15
     snake.append(canvas.create_rectangle(snakeSize,snakeSize, snakeSize * 2, snakeSize * 2, fill="white" ))
 
 
@@ -532,8 +627,10 @@ def mMenu():
         cWindow()
 
     def loadGame():
+        mainMenu.destroy()
         print("Load Game")
-
+        loadFunction()
+    
     def exitProgram():
         os._exit(0)
 
