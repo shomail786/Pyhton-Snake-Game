@@ -1,5 +1,5 @@
 from tkinter import *
-import sys, os, random
+import sys, os, random, time
 from tkinter import messagebox
 
 def loadFunction():
@@ -101,8 +101,61 @@ def saveFunction():
     exitButton.place(x=105, y=330)
 
 
-def gameFunction():
+def leaderboardFunction():
+    
+    def menuWindow():
+        leaderWindow.destroy()
+        mMenu()
 
+    h = 720
+    w = 1280
+
+    leaderWindow = Tk()
+    leaderWindow.title("Snek")
+
+    bgImage = PhotoImage(file="leaderboardbg.png")
+
+    canvas = Canvas(leaderWindow, height=h, width=w)
+    canvas.pack()
+
+    background = canvas.create_image((0,0), image = bgImage, anchor = "nw")
+
+    scores = []
+
+    leaderboard = open("leaderboard.txt", "r")
+    for line in leaderboard:
+        scores.append(line.strip("\n").split(" "))
+
+    for i in range(len(scores)):
+        scores[i][1] = int(scores[i][1])
+
+    scores.sort(key=lambda x: x[1], reverse=True)
+
+    txt = "1: %s: %s" % (scores[0][0], str(scores[0][1]))
+    canvas.create_text(650, 250, fill="white", font="Helvetica 32 bold", text=txt)
+
+    txt = "2: %s: %s" % (scores[1][0], str(scores[1][1]))
+    canvas.create_text(650, 300, fill="white", font="Helvetica 32 bold", text=txt)
+
+    txt = "3: %s: %s" % (scores[2][0], str(scores[2][1]))
+    canvas.create_text(650, 350, fill="white", font="Helvetica 32 bold", text=txt)
+
+    txt = "4: %s: %s" % (scores[3][0], str(scores[3][1]))
+    canvas.create_text(650, 400, fill="white", font="Helvetica 32 bold", text=txt)
+
+    txt = "5: %s: %s" % (scores[4][0], str(scores[4][1]))
+    canvas.create_text(650, 450, fill="white", font="Helvetica 32 bold", text=txt)
+
+    
+
+    mainMenuButton = Button(leaderWindow, text="Main Menu", bg='#e0b522', fg='white', height=2, width=20, command= menuWindow)
+    mainMenuButton.place(x=545, y=620)
+
+
+    leaderWindow.mainloop()
+
+
+def gameFunction():
 
     def leftKey(event):
         global direction
@@ -145,8 +198,10 @@ def gameFunction():
     def gameOverWindow():
         window.destroy()
         gMenu()
-
-    def pauseWindow():
+    
+    
+    
+    def pauseWindow(): 
         if messagebox.askyesno("Paused", "Would you like to resume?"):
             pass
 
@@ -155,7 +210,7 @@ def gameFunction():
             pMenu()
 
     def pauseButton():
-        btnPause = Button(window, bg="#e0b522", image=pauseImage, width="40", height="40", command= pauseWindow)
+        btnPause = Button(window, bg="#e0b522", image=pauseImage, width="40", height="40", command= lambda: pauseWindow())
         btnPause.place(x=45,y=45)
 
     def placeFood():
@@ -183,25 +238,15 @@ def gameFunction():
         else:
             speed = 6
 
+    def scoreCheatKey(event):
+        global score
+        score += 100
+        print(score)
+        txt = "Score:" + str(score)
+        canvas.itemconfigure(scoreText, text=txt)
 
-    def smallKey(event):
-        global snakeSize
-        if snakeSize > 10:
-            snakeSize -= 1
-        else:
-            snakeSize = 10
-        print(snakeSize)
 
-    def bigKey(event):
-        global snakeSize
-        if snakeSize < 30:
-            snakeSize += 1
-        else:
-            snakeSize = 30
-        
-        print(snakeSize)
-        
-    
+
     def escKey(event):
         pauseWindow()
 
@@ -346,9 +391,7 @@ def gameFunction():
     canvas.bind("<b>", bossKey)
     canvas.bind("<j>", slowKey)
     canvas.bind("<k>", fastKey)
-    canvas.bind("<n>", smallKey)
-    canvas.bind("<m>", bigKey)
-    
+    canvas.bind("<l>", scoreCheatKey)
     canvas.focus_set()
 
 
@@ -357,6 +400,7 @@ def gameFunction():
     placeFood()
     moveSnake()
     window.mainloop()
+
 
 def pMenu():
     def restartProgram():
@@ -372,9 +416,6 @@ def pMenu():
         pauseMenu.destroy() 
         mMenu()
 
-    def resumeProgram():
-        pauseMenu.destroy()
-        gameFunction()
         
     def exitProgram():
         pauseMenu.destroy()
@@ -385,7 +426,8 @@ def pMenu():
         saveFunction()
 
     def leaderWindow():
-        print("Leaderbaords")
+        pauseMenu.destroy()
+        leaderboardFunction()
 
     h = 600
     w = 400
@@ -398,9 +440,7 @@ def pMenu():
     
     canvas = Canvas(pauseMenu, height=h, width=w)
 
-    #txt = "~PAUSED~" 
 
-    #scoreText = canvas.create_text(200,70, fill="white" , font="Helvetica 40", text=txt)
     canvas.pack()
 
 
@@ -580,37 +620,6 @@ def iWindow():
     instructionWindow.mainloop()
 
 
-
-def bWindow():
-    def menuWindow():
-        bossWindow.destroy()
-        mMenu()
-
-    h = 600
-    w = 400
-
-    bossWindow = Tk()
-    bossWindow.title("Snek")
-
-    bgImage = PhotoImage(file="boss.png")
-
-    canvas = Canvas(bossWindow, height=h, width=w)
-    canvas.pack()
-
-    bgLabel = Label(canvas, image=bgImage)
-    bgLabel.pack()
-
-
-    mainMenuButton = Button(bossWindow, text="Main Menu", bg='#FFFFFF', fg='black', height=2, width=20, command= menuWindow)
-    mainMenuButton.place(x=545, y=620)
-
-
-    bossWindow.mainloop()
-
-
-
-
-
 def mMenu():
     def gameWindow():
         mainMenu.destroy()
@@ -621,7 +630,8 @@ def mMenu():
         iWindow()
 
     def leaderWindow():
-        print("Leaderbaords")
+        mainMenu.destroy()
+        leaderboardFunction()
 
     def controlsWindow():
         mainMenu.destroy()
@@ -629,13 +639,13 @@ def mMenu():
 
     def loadGame():
         mainMenu.destroy()
-        print("Load Game")
         loadFunction()
     
     def exitProgram():
         os._exit(0)
 
     def bossKey(event):
+        mainMenu.destroy()
         bWindow()
 
     h = 720
@@ -675,6 +685,37 @@ def mMenu():
 
     mainMenu.mainloop()
 
+
+def bWindow():
+    def menuWindow():
+        bossWindow.destroy()
+        mMenu()
+
+    h = 600
+    w = 400
+
+    bossWindow = Tk()
+    bossWindow.title("Snek")
+
+    bgImage = PhotoImage(file="boss.png")
+
+    canvas = Canvas(bossWindow, height=h, width=w)
+    canvas.pack()
+
+    bgLabel = Label(canvas, image=bgImage)
+    bgLabel.pack()
+
+
+    mainMenuButton = Button(bossWindow, text="Main Menu", bg='#FFFFFF', fg='black', height=2, width=20, command= menuWindow)
+    mainMenuButton.place(x=545, y=620)
+
+
+    bossWindow.mainloop()
+
+
+
+
+pause = True
 direction = "right"
 snakeSize = 15
 score = 0
