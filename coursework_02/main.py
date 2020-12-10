@@ -1,7 +1,12 @@
+#Recommended Resolution: 1280x720
+#All images are my own
+
+#Imports all needed libraries
 from tkinter import *
 import sys, os, random, time
 from tkinter import messagebox
 
+'''Function used to load the score from a previous saved game file'''
 def loadFunction():
     
     def menuWindow():
@@ -12,6 +17,7 @@ def loadFunction():
         loadMenu.destroy()
         os._exit(0)
 
+    #Takes user entered filename from input box and opens the file. Sets the score to the score in the file.
     def loadGameProg():
         global score
         fileString = fileText.get()
@@ -26,11 +32,11 @@ def loadFunction():
 
     h = 450
     w = 400
-
+    #Initialises Tkinter window
     loadMenu = Tk()
     loadMenu.title("Snek")
 
-
+    #Creates canvas object, and places labels and buttons 
     canvas = Canvas(loadMenu, bg='#e0b522', height=h, width=w)
     canvas.pack()
 
@@ -52,8 +58,7 @@ def loadFunction():
 
     exitButton = Button(loadMenu, text="Exit", bg='#e0b522', fg='white', height=3, width=20, command= exitProgram)
     exitButton.place(x=105, y=330)
-
-
+'''Function used to save game to user specified file'''
 def saveFunction():
      
     def menuWindow():
@@ -63,7 +68,7 @@ def saveFunction():
     def exitProgram():
         saveMenu.destroy()
         os._exit(0)
-
+    #Takes user entered filename from input box and saves the score to the user's specified filename.
     def saveGameProg():
         global score
         scoreString = str(score)
@@ -74,7 +79,8 @@ def saveFunction():
 
     h = 450
     w = 400
-
+    
+    #Initialises Tkinter window, canvas and any labels and buttons
     saveMenu = Tk()
     saveMenu.title("Snek")
 
@@ -100,7 +106,7 @@ def saveFunction():
     exitButton = Button(saveMenu, text="Exit", bg='#e0b522', fg='white', height=3, width=20, command= exitProgram)
     exitButton.place(x=105, y=330)
 
-
+'''Used to display 5 top scores sorted in decsending order'''
 def leaderboardFunction():
     
     def menuWindow():
@@ -109,7 +115,7 @@ def leaderboardFunction():
 
     h = 720
     w = 1280
-
+    #Initialises Tkinter window, canvas and any labels and buttons
     leaderWindow = Tk()
     leaderWindow.title("Snek")
 
@@ -120,8 +126,10 @@ def leaderboardFunction():
 
     background = canvas.create_image((0,0), image = bgImage, anchor = "nw")
 
+    #Creates list to store scores collected from score file
     scores = []
 
+    #Opens leaderboard file and loads scores and name into score list
     leaderboard = open("leaderboard.txt", "r")
     for line in leaderboard:
         scores.append(line.strip("\n").split(" "))
@@ -129,8 +137,11 @@ def leaderboardFunction():
     for i in range(len(scores)):
         scores[i][1] = int(scores[i][1])
 
+
+    #Sorts list by key of second value(Score), in descending order
     scores.sort(key=lambda x: x[1], reverse=True)
 
+    #Displays scores on leaderboard page
     txt = "1: %s: %s" % (scores[0][0], str(scores[0][1]))
     canvas.create_text(650, 250, fill="white", font="Helvetica 32 bold", text=txt)
 
@@ -154,9 +165,10 @@ def leaderboardFunction():
 
     leaderWindow.mainloop()
 
-
+'''Main function used to run snek game'''
 def gameFunction():
 
+    #Define functions to used arrow keys and wasd keys to control movement of the snake
     def leftKey(event):
         global direction
         direction = "left"
@@ -191,16 +203,18 @@ def gameFunction():
         global direction
         direction = "down"
 
+    #Opens boss window
     def bossWindow():
         window.destroy()
         bWindow()
 
+    #Opens game over window
     def gameOverWindow():
         window.destroy()
         gMenu()
     
     
-    
+    #Opens pause menu
     def pauseWindow(): 
         if messagebox.askyesno("Paused", "Would you like to resume?"):
             pass
@@ -209,20 +223,23 @@ def gameFunction():
             window.destroy()
             pMenu()
 
+    #Creates pause buttons
     def pauseButton():
         btnPause = Button(window, bg="#e0b522", image=pauseImage, width="40", height="40", command= lambda: pauseWindow())
         btnPause.place(x=45,y=45)
 
+    #Creates and places food onto canvas at random coordinates
     def placeFood():
         global food, foodX, foodY
-        food = canvas.create_rectangle(0,0, snakeSize, snakeSize, fill="steel blue")
+        food = canvas.create_rectangle(0,0, snakeSize, snakeSize, fill="red")
         foodX = random.randint(0,width-snakeSize)
         foodY = random.randint(0, height-snakeSize)
         canvas.move(food, foodX, foodY)
 
     def bossKey(event):
         bossWindow()
-
+    
+    #Defines functions for increase speed, decrease speed and increase score cheats
     def slowKey(event):
         global speed
         if speed < 85:
@@ -269,12 +286,16 @@ def gameFunction():
         foodY = random.randint(0,height-snakeSize)
         canvas.move(food, foodX, foodY)
 
+    #Function to see if snake is colliding with itself
     def overlapping(a,b):
         if a[0] < b[2] and a[2] > b[0] and a[1] < b[3] and a[3] > b[1]:
             return True
         return False
-        
+
+    #Function used increaase snake size 
     def growSnake():
+        
+        #Depending on direction, the snake increases either x1,x2,y1,y2 coordinates 
         lastElement = len(snake)-1
         lastElementPos = canvas.coords(snake[lastElement])
         snake.append(canvas.create_rectangle(0,0, snakeSize,snakeSize,fill="#FDF3F3"))
@@ -292,11 +313,14 @@ def gameFunction():
 
         global score
         global speed
+        
+        #Increases score and increases speed as the snake grows
         score += 10
-        speed -= 1
+        speed -= 2
         txt = "Score:" + str(score)
         canvas.itemconfigure(scoreText, text=txt)
 
+    #Used to move the snake across the canvas depending on user input
     def moveSnake():
         canvas.pack()
         positions = []
@@ -330,10 +354,12 @@ def gameFunction():
         sHeadPos = canvas.coords(snake[0])
         foodPos = canvas.coords(food)
         
+        #Checks for collisions and increases snake size
         if overlapping(sHeadPos, foodPos):
             moveFood()
             growSnake()
         
+        #Ends game if snake collides with its own body
         for i in range(1, len(snake)):
             if overlapping(sHeadPos, canvas.coords(snake[i])):
                 gameOver = True
@@ -344,6 +370,7 @@ def gameFunction():
         for i in range(len(snake)-1):
             canvas.coords(snake[i+1],positions[i][0], positions[i][1],positions[i][2],positions[i][3])
         
+        #Increases speed if game is not finished
         if 'gameOver' not in locals():
             global speed
             window.after(speed, moveSnake)
@@ -353,7 +380,7 @@ def gameFunction():
     width = 1280
     height = 720
 
-
+    #Initialises Tkinter window, canvas and any labels and buttons and background image
     window = setWindowDimensions(width, height)
 
     bgImage = PhotoImage(file="gamebg.png")
@@ -363,17 +390,20 @@ def gameFunction():
     background = canvas.create_image((0,0), image = bgImage, anchor = "nw")
     canvas.pack()
 
-
+    #Creates snake object and sets size to 15
     snake = []
     global snakeSize
     snakeSize = 15
-    snake.append(canvas.create_rectangle(snakeSize,snakeSize, snakeSize * 2, snakeSize * 2, fill="white" ))
+    snake.append(canvas.create_rectangle(snakeSize,snakeSize, snakeSize * 2, snakeSize * 2, fill="#cfffe5" ))
 
 
     
     txt = "Score:" + str(score)
 
+    
     scoreText = canvas.create_text( width/2 , 20 , fill="white" , font="Helvetica 18", text=txt)
+    
+    #Binds either arrow keys or wasd to the movement of the snake, depending on the control scheme set by the user
     global arrows
     if arrows == True:
         canvas.bind("<Left>", leftKey) 
@@ -387,6 +417,7 @@ def gameFunction():
         canvas.bind("<w>", wKey)
         canvas.bind("<s>", sKey)
 
+    #Binds boss key and cheat keys
     canvas.bind("<Escape>", escKey)
     canvas.bind("<b>", bossKey)
     canvas.bind("<j>", slowKey)
@@ -401,7 +432,7 @@ def gameFunction():
     moveSnake()
     window.mainloop()
 
-
+'''Function used to initialise and display the pause menu'''
 def pMenu():
     def restartProgram():
         print("Restarting")
@@ -431,7 +462,8 @@ def pMenu():
 
     h = 600
     w = 400
-
+    
+    #Initialises Tkinter window, canvas and any labels and buttons and images
     pauseMenu = Tk()
     pauseMenu.title("Snek")
 
@@ -467,13 +499,15 @@ def pMenu():
 
     pauseMenu.mainloop()
 
-
+'''Allows for changing of controls'''
 def cWindow():
-     
+    
+
     def menuWindow():
         controlWindow.destroy()
         mMenu()
 
+    #Set arrows boolean to true or false based on control scheme selected by the user
     def wasdControls():
         global arrows
         arrows = False
@@ -485,6 +519,7 @@ def cWindow():
     h = 600
     w = 400
 
+    #Initialises Tkinter window, canvas and any labels and buttons and images
     controlWindow = Tk()
     controlWindow.title("Snek")
 
@@ -510,7 +545,7 @@ def cWindow():
 
     controlWindow.mainloop()
 
-
+'''Function used to initialise and show the game over menu'''
 def gMenu():
     def restartProgram():
         print("Restarting")
@@ -540,7 +575,7 @@ def gMenu():
 
     def leaderWindow():
         print("Leaderbaords")
-
+    #Opens leaderboard file and saves user inputted name and score
     def saveLeaderBoard():
         global score
         scoreString = str(score)
@@ -552,6 +587,7 @@ def gMenu():
     h = 600
     w = 400
 
+    #Initialises Tkinter window, canvas and any labels and buttons and images
     gameOverMenu = Tk()
     gameOverMenu.title("Snek")
 
@@ -591,7 +627,7 @@ def gMenu():
 
     gameOverMenu.mainloop()
 
-
+'''Displays the 'how to play' window'''
 def iWindow():
     
     def menuWindow():
@@ -601,6 +637,7 @@ def iWindow():
     h = 600
     w = 400
 
+    #Initialises Tkinter window, canvas and any labels and buttons and iamges
     instructionWindow = Tk()
     instructionWindow.title("Snek")
 
@@ -620,6 +657,7 @@ def iWindow():
     instructionWindow.mainloop()
 
 
+'''Main menu funtion - runs first when program starts, links to different parts of the program'''
 def mMenu():
     def gameWindow():
         mainMenu.destroy()
@@ -651,6 +689,7 @@ def mMenu():
     h = 720
     w = 1280
 
+    #Initialises Tkinter window, canvas and any labels and buttons and images
     mainMenu = Tk()
     mainMenu.title("Main Menu ")
 
@@ -685,7 +724,7 @@ def mMenu():
 
     mainMenu.mainloop()
 
-
+'''When B key is pressed, this function is called to open the boss window'''
 def bWindow():
     def menuWindow():
         bossWindow.destroy()
@@ -694,6 +733,7 @@ def bWindow():
     h = 600
     w = 400
 
+    #Initialises Tkinter window, canvas and any labels and buttons and images
     bossWindow = Tk()
     bossWindow.title("Snek")
 
